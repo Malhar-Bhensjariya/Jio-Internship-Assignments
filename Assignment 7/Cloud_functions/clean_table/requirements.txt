@@ -1,0 +1,4 @@
+google-cloud-bigquery
+google-cloud-pubsub
+pandas
+db-dtypes
