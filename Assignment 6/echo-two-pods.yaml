@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echo-demo
+  template:
+    metadata:
+      labels:
+        app: echo-demo
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        args:
+        - "-text=Hello from $(POD_NAME)"
+        ports:
+        - containerPort: 5678
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-demo-service
+spec:
+  selector:
+    app: echo-demo
+  ports:
+  - port: 80
+    targetPort: 5678
+    nodePort: 30080
+  type: NodePort
